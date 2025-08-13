@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    
+    /* Enhanced IWIL Brand Colors - Modern Professional Palette */
+    --primary: 214 88% 52%; /* Refined IWIL Blue */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 98%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 98%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 214 88% 52%;
+    --radius: 0.75rem;
+    
+    /* Enhanced IWIL Design System */
+    --iwil-blue: 214 88% 52%;         /* Primary brand blue */
+    --iwil-blue-light: 214 100% 88%;  /* Light blue for backgrounds */
+    --iwil-blue-dark: 214 88% 42%;    /* Dark blue for emphasis */
+    --iwil-teal: 186 77% 52%;         /* Complementary teal */
+    --iwil-green: 158 69% 48%;        /* Success green */
+    --iwil-green-light: 158 50% 85%;  /* Light green backgrounds */
+    --iwil-purple: 256 87% 65%;       /* Accent purple */
+    --iwil-orange: 25 95% 65%;        /* Warning orange */
+    --iwil-pink: 330 77% 67%;         /* Accent pink */
+    
+    /* Gradient Variants */
+    --iwil-gradient-primary: linear-gradient(135deg, hsl(var(--iwil-blue)) 0%, hsl(var(--iwil-teal)) 100%);
+    --iwil-gradient-success: linear-gradient(135deg, hsl(var(--iwil-teal)) 0%, hsl(var(--iwil-green)) 100%);
+    --iwil-gradient-accent: linear-gradient(135deg, hsl(var(--iwil-purple)) 0%, hsl(var(--iwil-pink)) 100%);
+    --iwil-gradient-warm: linear-gradient(135deg, hsl(var(--iwil-orange)) 0%, hsl(var(--iwil-pink)) 100%);
+    
+    /* Glass morphism and backdrop effects */
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --backdrop-blur: blur(12px);
+    
+    /* Enhanced shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-glow: 0 0 20px rgb(59 130 246 / 0.3);
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Enhanced gradient utilities */
+  .iwil-gradient {
+    background: var(--iwil-gradient-primary);
+  }
+  
+  .iwil-gradient-success {
+    background: var(--iwil-gradient-success);
+  }
+  
+  .iwil-gradient-accent {
+    background: var(--iwil-gradient-accent);
+  }
+  
+  .iwil-gradient-warm {
+    background: var(--iwil-gradient-warm);
+  }
+  
+  .iwil-gradient-text {
+    background: var(--iwil-gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .iwil-gradient-text-accent {
+    background: var(--iwil-gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glass morphism effects */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: var(--backdrop-blur);
+    border: 1px solid var(--glass-border);
+  }
+  
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  /* Enhanced shadows */
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .shadow-2xl {
+    box-shadow: var(--shadow-2xl);
+  }
+
+  /* Card elevation system */
+  .card-elevated {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .card-elevated:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Improved scrollbars */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--iwil-blue) / 0.3);
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--iwil-blue) / 0.5);
+  }
+
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes glow {
+    from { box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
+    to { box-shadow: 0 0 30px rgba(59, 130, 246, 0.4); }
+  }
+}
