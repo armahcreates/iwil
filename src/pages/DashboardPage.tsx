@@ -20,14 +20,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
+// Avatar imports removed - no avatars displayed
 import { useData } from '../hooks/useData';
 import { getClients, getReports } from '../lib/api';
 import { Link } from 'react-router-dom';
 
 const LoadingSkeleton = () => (
   <div className="min-h-full relative">
-    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-green-600/5"></div>
+    <div className="absolute inset-0 iwil-gradient-subtle opacity-20"></div>
     <div className="relative p-6 sm:p-8 md:p-12">
       <div className="flex flex-col items-center justify-center py-20">
         <motion.div
@@ -71,7 +71,7 @@ export const DashboardPage: React.FC = () => {
   if (!clients || !reports) {
     return (
       <div className="min-h-full relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-red-50/30 via-transparent to-orange-50/20"></div>
+        <div className="absolute inset-0 iwil-gradient-subtle opacity-20"></div>
         <div className="relative p-6 sm:p-8 md:p-12">
           <div className="flex flex-col items-center justify-center py-20">
             <motion.div
@@ -80,7 +80,7 @@ export const DashboardPage: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-2xl">
+              <div className="w-16 h-16 iwil-gradient rounded-2xl flex items-center justify-center shadow-2xl">
                 <AlertTriangle className="h-8 w-8 text-white" />
               </div>
             </motion.div>
@@ -125,7 +125,7 @@ export const DashboardPage: React.FC = () => {
       icon: FileText,
       trend: '+12.5%',
       description: 'This quarter',
-      gradient: 'from-blue-500 to-blue-600'
+      gradient: 'iwil-gradient-primary'
     },
     {
       title: 'Active Clients',
@@ -133,7 +133,7 @@ export const DashboardPage: React.FC = () => {
       icon: Users,
       trend: '+8.2%',
       description: 'In protocols',
-      gradient: 'from-green-500 to-emerald-600'
+      gradient: 'iwil-gradient'
     },
     {
       title: 'Wellness Score',
@@ -141,7 +141,7 @@ export const DashboardPage: React.FC = () => {
       icon: Heart,
       trend: '+3.2%',
       description: 'Client average',
-      gradient: 'from-pink-500 to-purple-600'
+      gradient: 'iwil-gradient'
     },
     {
       title: 'Pending Review',
@@ -149,7 +149,7 @@ export const DashboardPage: React.FC = () => {
       icon: AlertTriangle,
       trend: '-5',
       description: 'Awaiting approval',
-      gradient: 'from-orange-500 to-red-500'
+      gradient: 'iwil-gradient'
     }
   ];
 
@@ -157,7 +157,7 @@ export const DashboardPage: React.FC = () => {
     <div className="min-h-full relative">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-green-600/5"></div>
+        <div className="absolute inset-0 iwil-gradient-subtle opacity-20"></div>
         <div className="relative p-6 sm:p-8 md:p-12">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
             <motion.div
@@ -188,7 +188,7 @@ export const DashboardPage: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Button variant="outline" size="sm" className="border-blue-200/60 text-blue-700 hover:bg-blue-50/80 backdrop-blur-sm bg-white/60">
+              <Button variant="outline" size="sm" className="border-slate-200/60 text-slate-700 hover:bg-slate-50/80 backdrop-blur-sm bg-white/60">
                 <Calendar className="mr-2 h-4 w-4" />
                 Schedule
               </Button>
@@ -273,7 +273,7 @@ export const DashboardPage: React.FC = () => {
                     </CardDescription>
                   </motion.div>
                   <Link to="/reports">
-                    <Button variant="outline" size="sm" className="border-blue-200/60 text-blue-700 hover:bg-blue-50/80 backdrop-blur-sm bg-white/60">
+                    <Button variant="outline" size="sm" className="border-slate-200/60 text-slate-700 hover:bg-slate-50/80 backdrop-blur-sm bg-white/60">
                       View All
                     </Button>
                   </Link>
@@ -286,14 +286,14 @@ export const DashboardPage: React.FC = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 + index * 0.1 }}
-                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border border-white/40 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50/70 hover:to-green-50/70 transition-all duration-300 bg-white/60 backdrop-blur-sm group"
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border border-white/40 rounded-2xl hover:bg-white/80 transition-all duration-300 bg-white/60 backdrop-blur-sm group"
                     whileHover={{ scale: 1.02, y: -2 }}
                   >
                     <div className="flex items-center space-x-4 mb-2 sm:mb-0">
                       <motion.div 
                         className={`p-3 rounded-xl shadow-md ${
                           report.status === 'sent' ? 'bg-emerald-100 text-emerald-700 shadow-emerald-200' :
-                          report.status === 'approved' ? 'bg-blue-100 text-blue-700 shadow-blue-200' :
+                          report.status === 'approved' ? 'bg-slate-100 text-slate-700 shadow-slate-200' :
                           report.status === 'review' ? 'bg-amber-100 text-amber-700 shadow-amber-200' :
                           'bg-slate-100 text-slate-600 shadow-slate-200'
                         }`}
@@ -305,9 +305,7 @@ export const DashboardPage: React.FC = () => {
                          <Clock size={18} />}
                       </motion.div>
                       <div>
-                        <p className="font-bold text-sm text-slate-800 group-hover:text-blue-700 transition-colors">
-                          {report.clientName}
-                        </p>
+                        <p className="font-bold text-sm text-slate-800 group-hover:text-slate-900 transition-colors">{report.clientName}</p>
                         <p className="text-xs text-slate-500 font-medium">{report.template}</p>
                       </div>
                     </div>
@@ -348,7 +346,7 @@ export const DashboardPage: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/95 to-white/80"></div>
                 <CardHeader className="relative">
                   <CardTitle className="flex items-center space-x-3 text-lg font-bold">
-                    <div className="p-2 iwil-gradient-accent rounded-xl">
+                    <div className="p-2 iwil-gradient rounded-xl">
                       <Zap className="h-5 w-5 text-white" />
                     </div>
                     <span className="text-slate-800">Quick Actions</span>
@@ -365,7 +363,7 @@ export const DashboardPage: React.FC = () => {
                   </Link>
                   <Link to="/clients">
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button size="sm" className="w-full justify-start border-blue-200/60 text-blue-700 hover:bg-blue-50/80 backdrop-blur-sm bg-white/60 h-11 rounded-xl font-semibold" variant="outline">
+                      <Button size="sm" className="w-full justify-start border-slate-200/60 text-slate-700 hover:bg-slate-50/80 backdrop-blur-sm bg-white/60 h-11 rounded-xl font-semibold" variant="outline">
                         <Users className="mr-3 h-5 w-5" />
                         Add Client
                       </Button>
@@ -384,7 +382,7 @@ export const DashboardPage: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/95 to-white/80"></div>
                 <CardHeader className="relative">
                   <CardTitle className="flex items-center space-x-3 text-lg font-bold">
-                    <div className="p-2 iwil-gradient-warm rounded-xl">
+                    <div className="p-2 iwil-gradient rounded-xl">
                       <Heart className="h-5 w-5 text-white" />
                     </div>
                     <span className="text-slate-800">Active Clients</span>
@@ -394,20 +392,15 @@ export const DashboardPage: React.FC = () => {
                   {recentClients.map((client, index) => (
                     <Link to={`/clients/${client.id}`} key={client.id}>
                       <motion.div 
-                        className="flex items-center space-x-4 p-3 rounded-xl hover:bg-gradient-to-r hover:from-blue-50/70 hover:to-green-50/70 transition-all duration-300 group bg-white/40 backdrop-blur-sm border border-white/40"
+                        className="flex items-center space-x-4 p-3 rounded-xl hover:bg-slate-50/70 transition-all duration-300 group bg-white/40 backdrop-blur-sm border border-white/40"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.7 + index * 0.1 }}
                         whileHover={{ scale: 1.02, y: -2 }}
                       >
-                        <Avatar className="h-11 w-11 ring-2 ring-blue-100 shadow-md">
-                          <AvatarImage src={client.avatar} alt={client.name} />
-                          <AvatarFallback className="iwil-gradient text-white font-bold text-sm">
-                            {client.name.split(' ').map(n => n[0]).join('')}
-                          </AvatarFallback>
-                        </Avatar>
+                        {/* Avatar removed - no images displayed */}
                         <div className="flex-1 min-w-0">
-                          <p className="font-bold text-sm text-slate-800 truncate group-hover:text-blue-700 transition-colors">
+                          <p className="font-bold text-sm text-slate-800 truncate group-hover:text-slate-700 transition-colors">
                             {client.name}
                           </p>
                           <p className="text-xs text-slate-500 truncate font-medium">{client.healthProtocol}</p>

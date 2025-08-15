@@ -3,19 +3,18 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, 
-  FileText, 
   Users, 
+  FileText, 
+  FileSpreadsheet, 
+  Calendar as CalendarIcon, 
   BarChart3, 
   Settings, 
-  FileSpreadsheet,
-  Calendar as CalendarIcon,
-  Shield,
   Heart,
   X
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { IWILLogo } from './ui/iwil-logo';
+import { IWILLogo } from './ui/iwil-logo-svg';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -29,7 +28,7 @@ const menuItems = [
   { id: 'templates', path: '/templates', label: 'Templates', icon: FileSpreadsheet },
   { id: 'calendar', path: '/calendar', label: 'Calendar', icon: CalendarIcon },
   { id: 'analytics', path: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { id: 'compliance', path: '/compliance', label: 'HIPAA Compliance', icon: Shield },
+  // HIPAA Compliance removed from navigation menu
   { id: 'settings', path: '/settings', label: 'Settings', icon: Settings }
 ];
 
@@ -83,7 +82,7 @@ const SidebarContent: React.FC<SidebarProps> = ({ setIsOpen }) => {
                   className={`w-full justify-start space-x-3 h-12 sm:h-12 transition-all duration-300 rounded-xl relative overflow-hidden group touch-manipulation ${
                     isActive 
                       ? 'text-white shadow-lg transform' 
-                      : 'text-slate-600 hover:text-blue-700 hover:bg-white/60'
+                      : 'text-slate-600 hover:text-slate-800 hover:bg-white/60'
                   }`}
                 >
                   {isActive && (
@@ -95,7 +94,7 @@ const SidebarContent: React.FC<SidebarProps> = ({ setIsOpen }) => {
                   )}
                   <div className="relative z-10 flex items-center space-x-3 w-full min-w-0">
                     <div className={`p-1.5 rounded-lg transition-colors flex-shrink-0 ${
-                      isActive ? 'bg-white/20' : 'group-hover:bg-blue-50'
+                      isActive ? 'bg-white/20' : 'group-hover:bg-slate-50'
                     }`}>
                       <Icon size={18} />
                     </div>

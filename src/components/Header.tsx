@@ -17,7 +17,7 @@ const tabTitles: { [key: string]: string } = {
   templates: 'Report Templates',
   calendar: 'Calendar',
   analytics: 'Analytics',
-  compliance: 'HIPAA Compliance',
+  // compliance: 'HIPAA Compliance', // Removed from navigation
   settings: 'Settings',
 };
 

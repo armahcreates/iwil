@@ -63,7 +63,7 @@ export function SignUpPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/.netlify/functions/auth-register', {
+      const response = await fetch('/api/auth-register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,12 +92,12 @@ export function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center px-4 py-6 sm:px-6 lg:px-8">
+    <div className="min-h-screen iwil-gradient-subtle flex items-center justify-center px-4 py-6 sm:px-6 lg:px-8">
       <div className="w-full max-w-lg sm:max-w-2xl">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <div className="mx-auto mb-3 sm:mb-4">
-            <IWILLogo size={56} className="sm:w-16 sm:h-16" />
+          <div className="flex justify-center items-center mb-3 sm:mb-4">
+            <IWILLogo size={56} className="sm:w-16 sm:h-16 mx-auto" />
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Join IWIL Protocol</h1>
           <p className="text-sm sm:text-base text-gray-600">Create your professional account to get started</p>
@@ -283,15 +283,15 @@ export function SignUpPage() {
                 type="checkbox"
                 checked={acceptedTerms}
                 onChange={(e) => setAcceptedTerms(e.target.checked)}
-                className="h-4 w-4 sm:h-4 sm:w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-1 touch-manipulation"
+                className="h-4 w-4 sm:h-4 sm:w-4 text-slate-600 focus:ring-slate-500 border-gray-300 rounded mt-1 touch-manipulation"
               />
               <label htmlFor="terms" className="text-sm text-gray-700">
                 I agree to the{' '}
-                <Link to="/terms" className="text-blue-600 hover:text-blue-500 font-medium touch-manipulation">
+                <Link to="/terms" className="text-slate-700 hover:text-slate-900 font-medium touch-manipulation">
                   Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link to="/privacy" className="text-blue-600 hover:text-blue-500 font-medium touch-manipulation">
+                <Link to="/privacy" className="text-slate-700 hover:text-slate-900 font-medium touch-manipulation">
                   Privacy Policy
                 </Link>
                 . I understand that this platform handles sensitive health information in compliance with HIPAA regulations.
@@ -312,7 +312,7 @@ export function SignUpPage() {
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="text-blue-600 hover:text-blue-500 font-medium touch-manipulation"
+                className="text-slate-700 hover:text-slate-900 font-medium touch-manipulation"
               >
                 Sign in here
               </Link>

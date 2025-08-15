@@ -2,7 +2,7 @@ export interface Client {
   id: string;
   name: string;
   email: string;
-  avatar: string;
+  avatar?: string;
   lastVisit: Date;
   nextAppointment?: Date;
   healthProtocol: string;
@@ -81,4 +81,5 @@ export interface CalendarEvent {
   description?: string;
   status: 'scheduled' | 'confirmed' | 'completed' | 'cancelled';
   location?: string;
+  notes?: string;
 }

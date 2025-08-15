@@ -14,16 +14,22 @@ import {
   Download
 } from 'lucide-react';
 import { calendarEvents } from '../data/calendarData';
-import { CalendarEvent } from '../types';
+import { CalendarEvent, Client } from '../types';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths, isToday, isBefore, startOfDay, getDay } from 'date-fns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
+import { AppointmentModal, AppointmentData } from '../components/calendar/AppointmentModal';
+import { useData } from '../hooks/useData';
+import { getClients } from '../lib/api';
 
 export const CalendarPage: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [events] = useState<CalendarEvent[]>(calendarEvents);
+  const [events, setEvents] = useState<CalendarEvent[]>(calendarEvents);
+  const [appointmentModalOpen, setAppointmentModalOpen] = useState(false);
+  
+  const { data: clients } = useData<Client[]>(getClients);
 
   const firstDayOfMonth = startOfMonth(currentDate);
   const lastDayOfMonth = endOfMonth(currentDate);
@@ -45,7 +51,7 @@ export const CalendarPage: React.FC = () => {
 
   const getEventColor = (type: string) => {
     switch (type) {
-      case 'appointment': return 'bg-blue-100 text-blue-700';
+      case 'appointment': return 'bg-slate-100 text-slate-700';
       case 'consultation': return 'bg-purple-100 text-purple-700';
       case 'deadline': return 'bg-red-100 text-red-700';
       case 'followup': return 'bg-green-100 text-green-700';
@@ -59,6 +65,24 @@ export const CalendarPage: React.FC = () => {
 
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
   const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
+  
+  const handleSaveAppointment = (appointmentData: AppointmentData) => {
+    const newEvent: CalendarEvent = {
+      id: appointmentData.id,
+      title: appointmentData.title,
+      date: appointmentData.date,
+      startTime: appointmentData.startTime,
+      endTime: appointmentData.endTime,
+      type: appointmentData.type,
+      clientId: appointmentData.clientId,
+      clientName: appointmentData.clientName,
+      location: appointmentData.location,
+      notes: appointmentData.notes,
+      status: 'scheduled'
+    };
+    
+    setEvents(prev => [...prev, newEvent]);
+  };
 
   const upcomingEvents = events
     .filter(event => !isBefore(event.date, startOfDay(new Date())))
@@ -66,7 +90,7 @@ export const CalendarPage: React.FC = () => {
     .slice(0, 4);
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 md:p-8 bg-gradient-to-br from-blue-50/20 to-green-50/20 min-h-full">
+    <div className="space-y-6 p-4 sm:p-6 md:p-8 iwil-gradient-subtle min-h-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <div className="flex items-center space-x-3 mb-1">
@@ -80,11 +104,15 @@ export const CalendarPage: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center space-x-2 sm:space-x-3">
-          <Button variant="outline" size="sm" className="border-blue-200 text-blue-700 hover:bg-blue-50">
+          <Button variant="outline" size="sm" className="border-slate-200 text-slate-700 hover:bg-slate-50">
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
-          <Button size="sm" className="iwil-gradient text-white shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button 
+            size="sm" 
+            className="iwil-gradient text-white shadow-lg hover:shadow-xl transition-all duration-300"
+            onClick={() => setAppointmentModalOpen(true)}
+          >
             <Plus className="mr-2 h-4 w-4" />
             Schedule
           </Button>
@@ -127,11 +155,11 @@ export const CalendarPage: React.FC = () => {
                       key={day.toString()}
                       onClick={() => setSelectedDate(day)}
                       className={`relative p-1.5 sm:p-2 min-h-[60px] sm:min-h-[80px] border rounded-lg cursor-pointer transition-colors duration-200 ${
-                        isSameDay(day, selectedDate) ? 'bg-blue-100 border-blue-300' : 'border-gray-100 hover:bg-gray-50'
+                        isSameDay(day, selectedDate) ? 'bg-slate-100 border-slate-300' : 'border-gray-100 hover:bg-gray-50'
                       }`}
                       whileHover={{ scale: 1.05 }}
                     >
-                      <span className={`text-xs sm:text-sm font-medium ${isToday(day) ? 'bg-blue-600 text-white rounded-full flex items-center justify-center h-6 w-6' : 'text-gray-800'}`}>
+                      <span className={`text-xs sm:text-sm font-medium ${isToday(day) ? 'bg-slate-600 text-white rounded-full flex items-center justify-center h-6 w-6' : 'text-gray-800'}`}>
                         {format(day, 'd')}
                       </span>
                       <div className="mt-1 space-y-0.5">
@@ -208,6 +236,14 @@ export const CalendarPage: React.FC = () => {
           </Card>
         </div>
       </div>
+      
+      <AppointmentModal
+        isOpen={appointmentModalOpen}
+        onClose={() => setAppointmentModalOpen(false)}
+        selectedDate={selectedDate}
+        clients={clients || []}
+        onSave={handleSaveAppointment}
+      />
     </div>
   );
 };

@@ -13,7 +13,8 @@ import {
   Clock,
   Plus,
   MoreHorizontal,
-  LoaderCircle
+  LoaderCircle,
+  FilePlus
 } from 'lucide-react';
 import { Report, Client } from '../types';
 import { format } from 'date-fns';
@@ -25,17 +26,20 @@ import { Progress } from '../components/ui/progress';
 import { useData } from '../hooks/useData';
 import { getReports, getClients } from '../lib/api';
 import { CreateReportDialog } from '../components/reports/CreateReportDialog';
-import { PDFViewer } from '../components/pdf/PDFViewer';
+import { PDFPreviewModal } from '../components/PDFPreviewModal';
+import { pdfGenerator, ReportData } from '../lib/pdfGenerator';
 
 export const ReportsPage: React.FC = () => {
   const { data: reports, isLoading: isLoadingReports } = useData<Report[]>(getReports);
   const { data: clients, isLoading: isLoadingClients } = useData<Client[]>(getClients);
   
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [typeFilter, setTypeFilter] = useState<string>('all');
-  const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
-
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [pdfPreviewOpen, setPdfPreviewOpen] = useState(false);
+  const [selectedReportData, setSelectedReportData] = useState<ReportData | null>(null);
+  const [generatingPdf, setGeneratingPdf] = useState<string | null>(null);
 
   const filteredReports = reports?.filter(report => {
     const matchesSearch = report.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -49,7 +53,7 @@ export const ReportsPage: React.FC = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'sent': return <CheckCircle className="text-green-600" size={16} />;
-      case 'approved': return <CheckCircle className="text-blue-600" size={16} />;
+      case 'approved': return <CheckCircle className="text-slate-600" size={16} />;
       case 'review': return <AlertTriangle className="text-orange-600" size={16} />;
       default: return <Clock className="text-gray-600" size={16} />;
     }
@@ -64,14 +68,76 @@ export const ReportsPage: React.FC = () => {
     }
   };
 
+  const convertReportToReportData = (report: Report): ReportData => {
+    return {
+      id: report.id,
+      clientName: report.clientName,
+      clientEmail: `${report.clientName.toLowerCase().replace(/\s+/g, '.')}@example.com`,
+      template: report.template,
+      status: report.status,
+      createdAt: report.createdAt.toISOString(),
+      data: {
+        assessment: {
+          overallScore: Math.floor(Math.random() * 40) + 60, // Mock score 60-100
+          categories: [
+            {
+              name: 'Physical Wellness',
+              score: Math.floor(Math.random() * 30) + 70,
+              recommendations: ['Increase daily activity', 'Improve sleep schedule']
+            },
+            {
+              name: 'Mental Wellness',
+              score: Math.floor(Math.random() * 30) + 70,
+              recommendations: ['Practice mindfulness', 'Stress management techniques']
+            },
+            {
+              name: 'Nutritional Wellness',
+              score: Math.floor(Math.random() * 30) + 70,
+              recommendations: ['Balanced diet plan', 'Hydration goals']
+            }
+          ]
+        },
+        recommendations: [
+          'Continue current wellness practices',
+          'Focus on identified improvement areas',
+          'Schedule regular check-ins'
+        ],
+        nextSteps: [
+          'Review recommendations with healthcare provider',
+          'Implement suggested lifestyle changes',
+          'Schedule follow-up assessment in 3 months'
+        ],
+        notes: 'Client shows good engagement with wellness protocols. Continue monitoring progress and adjust recommendations as needed.'
+      }
+    };
+  };
+
+  const handleViewPDF = (report: Report) => {
+    const reportData = convertReportToReportData(report);
+    setSelectedReportData(reportData);
+    setPdfPreviewOpen(true);
+  };
+
+  const handleGeneratePDF = async (report: Report) => {
+    setGeneratingPdf(report.id);
+    try {
+      const reportData = convertReportToReportData(report);
+      await pdfGenerator.generateAndDownload(reportData);
+    } catch (error) {
+      console.error('Failed to generate PDF:', error);
+    } finally {
+      setGeneratingPdf(null);
+    }
+  };
+
   return (
     <>
       <CreateReportDialog 
-        isOpen={isCreateDialogOpen} 
+        isOpen={createDialogOpen} 
         onOpenChange={setCreateDialogOpen}
         clients={clients}
       />
-      <div className="space-y-6 p-4 sm:p-6 md:p-8 bg-gradient-to-br from-blue-50/20 to-green-50/20 min-h-full">
+      <div className="space-y-6 p-4 sm:p-6 md:p-8 iwil-gradient-subtle min-h-full">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <div className="flex items-center space-x-3 mb-1">
@@ -85,7 +151,7 @@ export const ReportsPage: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center space-x-2 sm:space-x-3">
-            <Button variant="outline" size="sm" className="border-blue-200 text-blue-700 hover:bg-blue-50">
+            <Button variant="outline" size="sm" className="border-slate-200 text-slate-700 hover:bg-slate-50">
               <Download className="mr-2 h-4 w-4" />
               Export
             </Button>
@@ -99,7 +165,7 @@ export const ReportsPage: React.FC = () => {
         <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="text-lg flex items-center space-x-2">
-              <Filter className="h-5 w-5 text-blue-600" />
+              <Filter className="h-5 w-5 text-slate-600" />
               <span>Filter & Search</span>
             </CardTitle>
           </CardHeader>
@@ -111,7 +177,7 @@ export const ReportsPage: React.FC = () => {
                   placeholder="Search by client or template..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-gray-200 focus:border-blue-300 focus:ring-blue-300"
+                  className="pl-10 border-gray-200 focus:border-slate-300 focus:ring-slate-300"
                 />
               </div>
               <div className="grid grid-cols-2 md:flex gap-4">
@@ -194,27 +260,33 @@ export const ReportsPage: React.FC = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2 pt-4">
-                      {(() => {
-                        const client = clients?.find(c => c.id === report.clientId);
-                        return client ? (
-                          <PDFViewer
-                            client={client}
-                            report={report}
-                            trigger={
-                              <Button variant="outline" size="sm" className="flex-1 border-gray-200 hover:bg-gray-50">
-                                <Eye className="mr-2 h-4 w-4" />
-                                View PDF
-                              </Button>
-                            }
-                          />
-                        ) : (
-                          <Button variant="outline" size="sm" className="flex-1 border-gray-200 hover:bg-gray-50" disabled>
-                            <Eye className="mr-2 h-4 w-4" />
-                            View PDF
-                          </Button>
-                        );
-                      })()}
-                      <Button variant="outline" size="sm" className="flex-1 border-blue-200 text-blue-700 hover:bg-blue-50">
+                      {(report.status === 'approved' || report.status === 'sent') ? (
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1 border-slate-200 text-slate-700 hover:bg-slate-50"
+                          onClick={() => handleViewPDF(report)}
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                          View PDF
+                        </Button>
+                      ) : (
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1 border-slate-200 text-slate-700 hover:bg-slate-50"
+                          onClick={() => handleGeneratePDF(report)}
+                          disabled={generatingPdf === report.id}
+                        >
+                          {generatingPdf === report.id ? (
+                            <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <FilePlus className="mr-2 h-4 w-4" />
+                          )}
+                          {generatingPdf === report.id ? 'Generating...' : 'Generate PDF'}
+                        </Button>
+                      )}
+                      <Button variant="outline" size="sm" className="flex-1 border-slate-200 text-slate-700 hover:bg-slate-50">
                         <Edit className="mr-2 h-4 w-4" />
                         Edit
                       </Button>
@@ -250,6 +322,12 @@ export const ReportsPage: React.FC = () => {
           </Card>
         )}
       </div>
+      
+      <PDFPreviewModal
+        isOpen={pdfPreviewOpen}
+        onClose={() => setPdfPreviewOpen(false)}
+        reportData={selectedReportData}
+      />
     </>
   );
 };

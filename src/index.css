@@ -27,22 +27,23 @@
     --ring: 214 88% 52%;
     --radius: 0.75rem;
     
-    /* Enhanced IWIL Design System */
-    --iwil-blue: 214 88% 52%;         /* Primary brand blue */
-    --iwil-blue-light: 214 100% 88%;  /* Light blue for backgrounds */
-    --iwil-blue-dark: 214 88% 42%;    /* Dark blue for emphasis */
-    --iwil-teal: 186 77% 52%;         /* Complementary teal */
-    --iwil-green: 158 69% 48%;        /* Success green */
-    --iwil-green-light: 158 50% 85%;  /* Light green backgrounds */
-    --iwil-purple: 256 87% 65%;       /* Accent purple */
-    --iwil-orange: 25 95% 65%;        /* Warning orange */
-    --iwil-pink: 330 77% 67%;         /* Accent pink */
+    /* IWIL Brand Design System - Consistent Brand Colors */
+    --iwil-primary: 214 88% 52%;      /* Primary brand blue */
+    --iwil-primary-light: 214 100% 88%; /* Light blue for backgrounds */
+    --iwil-primary-dark: 214 88% 42%; /* Dark blue for emphasis */
+    --iwil-secondary: 210 15% 25%;    /* Professional dark gray */
+    --iwil-accent: 214 100% 65%;      /* Lighter brand blue accent */
+    --iwil-neutral: 210 10% 95%;      /* Light neutral background */
+    --iwil-neutral-dark: 210 10% 15%; /* Dark neutral text */
+    --iwil-success: 214 88% 52%;      /* Use brand blue for success */
+    --iwil-warning: 35 100% 55%;      /* Professional orange for warnings */
+    --iwil-error: 0 84% 60%;          /* Standard red for errors */
     
-    /* Gradient Variants */
-    --iwil-gradient-primary: linear-gradient(135deg, hsl(var(--iwil-blue)) 0%, hsl(var(--iwil-teal)) 100%);
-    --iwil-gradient-success: linear-gradient(135deg, hsl(var(--iwil-teal)) 0%, hsl(var(--iwil-green)) 100%);
-    --iwil-gradient-accent: linear-gradient(135deg, hsl(var(--iwil-purple)) 0%, hsl(var(--iwil-pink)) 100%);
-    --iwil-gradient-warm: linear-gradient(135deg, hsl(var(--iwil-orange)) 0%, hsl(var(--iwil-pink)) 100%);
+    /* Brand-Consistent Gradient Variants */
+    --iwil-gradient-primary: linear-gradient(135deg, hsl(var(--iwil-primary)) 0%, hsl(var(--iwil-accent)) 100%);
+    --iwil-gradient-secondary: linear-gradient(135deg, hsl(var(--iwil-primary-dark)) 0%, hsl(var(--iwil-primary)) 100%);
+    --iwil-gradient-subtle: linear-gradient(135deg, hsl(var(--iwil-neutral)) 0%, hsl(var(--iwil-primary-light)) 100%);
+    --iwil-gradient-professional: linear-gradient(135deg, hsl(var(--iwil-secondary)) 0%, hsl(var(--iwil-primary-dark)) 100%);
     
     /* Glass morphism and backdrop effects */
     --glass-bg: rgba(255, 255, 255, 0.85);
@@ -97,16 +98,16 @@
     background: var(--iwil-gradient-primary);
   }
   
-  .iwil-gradient-success {
-    background: var(--iwil-gradient-success);
+  .iwil-gradient-secondary {
+    background: var(--iwil-gradient-secondary);
   }
   
-  .iwil-gradient-accent {
-    background: var(--iwil-gradient-accent);
+  .iwil-gradient-subtle {
+    background: var(--iwil-gradient-subtle);
   }
   
-  .iwil-gradient-warm {
-    background: var(--iwil-gradient-warm);
+  .iwil-gradient-professional {
+    background: var(--iwil-gradient-professional);
   }
   
   .iwil-gradient-text {
@@ -116,8 +117,15 @@
     background-clip: text;
   }
   
-  .iwil-gradient-text-accent {
-    background: var(--iwil-gradient-accent);
+  .iwil-gradient-text-secondary {
+    background: var(--iwil-gradient-secondary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .iwil-gradient-text-professional {
+    background: var(--iwil-gradient-professional);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

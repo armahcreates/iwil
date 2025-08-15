@@ -1,11 +1,49 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
-import { neon } from '@neondatabase/serverless';
 
-const sql = neon(process.env.DATABASE_URL!);
+// Mock user storage for local development
+interface MockUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  passwordHash: string;
+  role: string;
+  organization?: string;
+  phone?: string;
+  isActive: boolean;
+  createdAt: string;
+}
 
-// Configure Local Strategy
+const mockUsers: MockUser[] = [
+  {
+    id: 'staff_demo_1',
+    firstName: 'Demo',
+    lastName: 'User',
+    email: 'demo@iwil.com',
+    passwordHash: '$2a$10$ziURsr4s9KFnx7X4hEpPiug/1D01Bp94.OgUsnA/vR.Xfb7jeXdw2', // password: 'demo123'
+    role: 'staff',
+    organization: 'IWIL Protocol',
+    phone: '+1-555-0123',
+    isActive: true,
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'staff_admin_1',
+    firstName: 'Admin',
+    lastName: 'User',
+    email: 'admin@iwil.com',
+    passwordHash: '$2a$10$gM2UHT4RkE02FF./SFiXAeQDSvGeeHGnpTF9fDSYMs7cB04SnZ8Ru', // password: 'admin123'
+    role: 'admin',
+    organization: 'IWIL Protocol',
+    phone: '+1-555-0124',
+    isActive: true,
+    createdAt: new Date().toISOString()
+  }
+];
+
+// Configure Local Strategy with mock data
 passport.use(new LocalStrategy(
   {
     usernameField: 'email',
@@ -13,27 +51,20 @@ passport.use(new LocalStrategy(
   },
   async (email: string, password: string, done) => {
     try {
-      // Ensure staff table exists
-      await ensureStaffTableExists();
+      // Find user by email in mock data
+      const user = mockUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
 
-      // Find user by email
-      const users = await sql`
-        SELECT * FROM staff WHERE email = ${email.toLowerCase()}
-      `;
-
-      if (users.length === 0) {
+      if (!user) {
         return done(null, false, { message: 'Invalid email or password' });
       }
 
-      const user = users[0];
-
       // Check if user is active
-      if (!user.is_active) {
+      if (!user.isActive) {
         return done(null, false, { message: 'Account is deactivated' });
       }
 
       // Verify password
-      const isValidPassword = await bcrypt.compare(password, user.password_hash);
+      const isValidPassword = await bcrypt.compare(password, user.passwordHash);
       if (!isValidPassword) {
         return done(null, false, { message: 'Invalid email or password' });
       }
@@ -41,13 +72,13 @@ passport.use(new LocalStrategy(
       // Return user data (without password)
       const userData = {
         id: user.id,
-        firstName: user.first_name,
-        lastName: user.last_name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         role: user.role,
         organization: user.organization,
         phone: user.phone,
-        createdAt: user.created_at,
+        createdAt: user.createdAt,
       };
 
       return done(null, userData);
@@ -63,27 +94,24 @@ passport.serializeUser((user: any, done) => {
   done(null, user.id);
 });
 
-// Deserialize user from session
+// Deserialize user from session with mock data
 passport.deserializeUser(async (id: string, done) => {
   try {
-    const users = await sql`
-      SELECT * FROM staff WHERE id = ${id} AND is_active = true
-    `;
+    const user = mockUsers.find(u => u.id === id && u.isActive);
 
-    if (users.length === 0) {
+    if (!user) {
       return done(null, false);
     }
 
-    const user = users[0];
     const userData = {
       id: user.id,
-      firstName: user.first_name,
-      lastName: user.last_name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       role: user.role,
       organization: user.organization,
       phone: user.phone,
-      createdAt: user.created_at,
+      createdAt: user.createdAt,
     };
 
     done(null, userData);
@@ -93,33 +121,16 @@ passport.deserializeUser(async (id: string, done) => {
   }
 });
 
-// Helper function to ensure staff table exists
-async function ensureStaffTableExists() {
-  try {
-    await sql`
-      CREATE TABLE IF NOT EXISTS staff (
-        id TEXT PRIMARY KEY,
-        first_name TEXT NOT NULL,
-        last_name TEXT NOT NULL,
-        email TEXT NOT NULL UNIQUE,
-        password_hash TEXT NOT NULL,
-        role TEXT NOT NULL DEFAULT 'staff',
-        organization TEXT,
-        phone TEXT,
-        is_active BOOLEAN NOT NULL DEFAULT true,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `;
+// Helper function to find user by email in mock data
+function findUserByEmail(email: string): MockUser | undefined {
+  return mockUsers.find(user => user.email.toLowerCase() === email.toLowerCase());
+}
 
-    // Create index on email for faster lookups
-    await sql`
-      CREATE INDEX IF NOT EXISTS idx_staff_email ON staff(email)
-    `;
-  } catch (error) {
-    console.error('Error ensuring staff table exists:', error);
-    throw error;
-  }
+// Helper function to generate unique user ID
+function generateUserId(): string {
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substring(2, 8);
+  return `staff_${timestamp}_${random}`;
 }
 
 // Helper function to register a new user
@@ -132,49 +143,57 @@ export async function registerUser(userData: {
   organization?: string;
   phone?: string;
 }) {
-  const { firstName, lastName, email, password, role, organization, phone } = userData;
+  try {
+    const { firstName, lastName, email, password, role = 'staff', organization, phone } = userData;
 
-  // Ensure staff table exists
-  await ensureStaffTableExists();
+    // Check if user already exists in mock data
+    const existingUser = findUserByEmail(email);
+    if (existingUser) {
+      throw new Error('User with this email already exists');
+    }
 
-  // Check if user already exists
-  const existingUsers = await sql`
-    SELECT id FROM staff WHERE email = ${email.toLowerCase()}
-  `;
+    // Hash password
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
 
-  if (existingUsers.length > 0) {
-    throw new Error('An account with this email already exists');
+    // Generate unique user ID
+    const userId = generateUserId();
+
+    // Create new user object
+    const newUser: MockUser = {
+      id: userId,
+      firstName,
+      lastName,
+      email: email.toLowerCase(),
+      passwordHash,
+      role,
+      organization: organization || '',
+      phone: phone || '',
+      isActive: true,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Add to mock users array
+    mockUsers.push(newUser);
+
+    // Return user data (without password)
+    return {
+      id: userId,
+      firstName,
+      lastName,
+      email: email.toLowerCase(),
+      role,
+      organization: organization || '',
+      phone: phone || '',
+      createdAt: newUser.createdAt,
+    };
+  } catch (error) {
+    console.error('Registration error:', error);
+    throw error;
   }
-
-  // Hash password
-  const saltRounds = 12;
-  const passwordHash = await bcrypt.hash(password, saltRounds);
-
-  // Generate user ID
-  const userId = `staff_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-  // Create new user
-  await sql`
-    INSERT INTO staff (
-      id, first_name, last_name, email, password_hash, 
-      role, organization, phone, created_at, updated_at
-    ) VALUES (
-      ${userId}, ${firstName}, ${lastName}, ${email.toLowerCase()}, ${passwordHash},
-      ${role || 'staff'}, ${organization || ''}, ${phone || ''}, NOW(), NOW()
-    )
-  `;
-
-  // Return user data
-  return {
-    id: userId,
-    firstName,
-    lastName,
-    email: email.toLowerCase(),
-    role: role || 'staff',
-    organization: organization || '',
-    phone: phone || '',
-    createdAt: new Date(),
-  };
 }
+
+// Export mock users for debugging (development only)
+export { mockUsers };
 
 export default passport;

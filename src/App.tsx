@@ -11,6 +11,8 @@ import { ClientsPage } from './pages/ClientsPage';
 import { ClientDetailPage } from './pages/ClientDetailPage';
 import { TemplatesPage } from './pages/TemplatesPage';
 import { CalendarPage } from './pages/CalendarPage';
+import { AnalyticsPage } from './pages/AnalyticsPage';
+import { SettingsPage } from './pages/SettingsPage';
 import { Sparkles } from 'lucide-react';
 
 function App() {
@@ -34,9 +36,9 @@ function App() {
           <Route path="clients/:clientId" element={<ClientDetailPage />} />
           <Route path="templates" element={<TemplatesPage />} />
           <Route path="calendar" element={<CalendarPage />} />
-          <Route path="analytics" element={<ComingSoonPage title="Analytics & Insights" />} />
-          <Route path="compliance" element={<ComingSoonPage title="HIPAA Compliance" />} />
-          <Route path="settings" element={<ComingSoonPage title="Settings" />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
+          {/* HIPAA Compliance route removed from navigation */}
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
 
         {/* Catch all route - redirect to dashboard */}

@@ -19,7 +19,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Progress } from '../components/ui/progress';
 import { PDFViewer } from '../components/pdf/PDFViewer';
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
+// Avatar imports removed - no avatars displayed
 import { useData } from '../hooks/useData';
 import { getClients } from '../lib/api';
 
@@ -132,7 +132,7 @@ export const ClientsPage: React.FC = () => {
                     Client Management
                   </h1>
                   <p className="text-slate-600 text-sm md:text-lg mt-1 font-medium">
-                    Holistic health protocol & wellness tracking
+                    Holistic health protocol & I.W.I.L. tracking
                   </p>
                 </div>
               </div>
@@ -164,14 +164,14 @@ export const ClientsPage: React.FC = () => {
               <div className="p-2 iwil-gradient rounded-xl">
                 <Search className="h-5 w-5 text-white" />
               </div>
-              <span className="text-slate-800">Find Wellness Clients</span>
+              <span className="text-slate-800">Find I.W.I.L. Clients</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="relative">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
               <Input
-                placeholder="Search by name or wellness protocol..."
+                placeholder="Search by name or I.W.I.L. protocol..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-12 h-12 border-slate-200/60 focus:border-blue-300 focus:ring-blue-300 bg-white/60 backdrop-blur-sm rounded-xl"
@@ -194,12 +194,7 @@ export const ClientsPage: React.FC = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-white/95 to-white/80 group-hover:from-white/98 group-hover:to-white/90 transition-all duration-300"></div>
                   <CardHeader className="relative pb-4">
                     <div className="flex items-center space-x-4">
-                      <Avatar className="h-14 w-14 ring-2 ring-blue-100 shadow-lg">
-                        <AvatarImage src={client.avatar} alt={client.name} />
-                        <AvatarFallback className="iwil-gradient text-white font-bold text-lg">
-                          {client.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
+                      {/* Avatar removed - no images displayed */}
                       <div className="flex-1">
                         <CardTitle className="text-lg text-slate-800 font-bold group-hover:text-blue-700 transition-colors">{client.name}</CardTitle>
                         <CardDescription className="text-sm text-slate-600 font-medium">{client.email}</CardDescription>
@@ -212,7 +207,7 @@ export const ClientsPage: React.FC = () => {
                       <div className="p-4 bg-gradient-to-r from-blue-50/80 to-green-50/80 rounded-xl border border-blue-100/60 mb-4 backdrop-blur-sm">
                         <div className="flex items-center space-x-2 mb-2">
                           <Sparkles className="h-4 w-4 text-blue-600" />
-                          <span className="text-sm font-bold text-blue-700">Wellness Protocol</span>
+                          <span className="text-sm font-bold text-blue-700">I.W.I.L. Protocol</span>
                         </div>
                         <p className="text-sm text-slate-700 font-semibold">{client.healthProtocol}</p>
                       </div>
@@ -266,7 +261,7 @@ export const ClientsPage: React.FC = () => {
                           deadline: client.nextAppointment || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
                           createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
                           lastModified: new Date(),
-                          templateName: 'Comprehensive Wellness Assessment',
+                          template: 'I.W.I.L. Comprehensive Body-Mind-Health Analysis',
                           completionPercentage: 95
                         }}
                         trigger={
@@ -298,7 +293,7 @@ export const ClientsPage: React.FC = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-slate-800 mb-3">No clients found</h3>
                 <p className="text-slate-600 mb-6 max-w-md mx-auto font-medium">
-                  Try adjusting your search or add a new client to begin their wellness journey.
+                  Try adjusting your search or add a new client to begin their I.W.I.L. journey.
                 </p>
                 <Button className="iwil-gradient text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 px-6 py-3 rounded-xl font-semibold">
                   <Plus className="mr-2 h-5 w-5" />

@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { IWILLogo } from '../components/ui/iwil-logo-svg';
+import { TestCredentials } from '../components/TestCredentials';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -15,13 +16,18 @@ export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const handleCredentialSelect = (email: string, password: string) => {
+    setEmail(email);
+    setPassword(password);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
     try {
-      const response = await fetch('/.netlify/functions/auth-login', {
+      const response = await fetch('/api/auth-login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,8 +63,8 @@ export function LoginPage() {
       <div className="w-full max-w-sm sm:max-w-md">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <div className="mx-auto mb-3 sm:mb-4">
-            <IWILLogo size={56} className="sm:w-16 sm:h-16" />
+          <div className="flex justify-center items-center mb-3 sm:mb-4">
+            <IWILLogo size={56} className="sm:w-16 sm:h-16 mx-auto" />
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Welcome Back</h1>
           <p className="text-sm sm:text-base text-gray-600">Sign in to your IWIL Protocol account</p>
@@ -156,6 +162,11 @@ export function LoginPage() {
               </Link>
             </p>
           </div>
+        </div>
+
+        {/* Test Credentials */}
+        <div className="mt-6 sm:mt-8">
+          <TestCredentials onCredentialSelect={handleCredentialSelect} />
         </div>
 
         {/* Footer */}

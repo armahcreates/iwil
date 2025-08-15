@@ -9,6 +9,14 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
+  // Bypass authentication in development environment
+  const isDevelopment = import.meta.env.DEV;
+  
+  if (isDevelopment) {
+    // In development, allow access to all pages without authentication
+    return <>{children}</>;
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center">

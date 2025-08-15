@@ -18,7 +18,7 @@ export function IWILLogoBlob({ size = 64, className = '', fallback }: IWILLogoBl
         setError('');
 
         // First try to upload the logo if it doesn't exist
-        const uploadResponse = await fetch('/.netlify/functions/upload-logo', {
+        const uploadResponse = await fetch('/api/upload-logo', {
           method: 'POST',
         });
 
@@ -27,7 +27,7 @@ export function IWILLogoBlob({ size = 64, className = '', fallback }: IWILLogoBl
           setLogoUrl(uploadData.logoUrl);
         } else {
           // If upload fails, try to get existing logo
-          const getResponse = await fetch('/.netlify/functions/upload-logo', {
+          const getResponse = await fetch('/api/upload-logo', {
             method: 'GET',
           });
 
@@ -109,7 +109,7 @@ export function useIWILLogo() {
         setIsLoading(true);
         setError('');
 
-        const response = await fetch('/.netlify/functions/upload-logo', {
+        const response = await fetch('/api/upload-logo', {
           method: 'POST',
         });
 

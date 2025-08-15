@@ -83,7 +83,7 @@ export function DemoCredentialsPage() {
 
   const seedDemoData = async () => {
     try {
-      const response = await fetch('/.netlify/functions/seed-demo-data', {
+      const response = await fetch('/api/seed-demo-data', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ export function DemoCredentialsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 px-4 py-6 sm:px-6 lg:px-8">
+    <div className="min-h-screen iwil-gradient-subtle px-4 py-6 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
@@ -129,12 +129,12 @@ export function DemoCredentialsPage() {
           {demoAccounts.map((account, index) => (
             <Card key={index} className="p-4 sm:p-6 hover:shadow-lg transition-shadow">
               <div className="flex items-start space-x-3 mb-3 sm:mb-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 rounded-full flex items-center justify-center text-slate-700">
                   {account.icon}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{account.name}</h3>
-                  <p className="text-xs sm:text-sm text-blue-600 font-medium">{account.role}</p>
+                  <p className="text-xs sm:text-sm text-slate-700 font-medium">{account.role}</p>
                   <p className="text-xs text-gray-500 truncate">{account.organization}</p>
                 </div>
               </div>

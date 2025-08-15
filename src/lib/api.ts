@@ -40,7 +40,7 @@ function mapApiClient(apiClient: ApiClient): Client {
       apiClient.avatar ||
       (apiClient.avatar_key
         ? `/api/avatars/${apiClient.avatar_key}`
-        : `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(apiClient.name)}`),
+        : `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face`),
     lastVisit: new Date(apiClient.last_visit),
     nextAppointment: apiClient.next_appointment ? new Date(apiClient.next_appointment) : undefined,
     healthProtocol: apiClient.health_protocol,
